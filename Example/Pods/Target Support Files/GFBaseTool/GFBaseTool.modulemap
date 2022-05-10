@@ -1,0 +1,6 @@
+framework module GFBaseTool {
+  umbrella header "GFBaseTool-umbrella.h"
+
+  export *
+  module * { export * }
+}

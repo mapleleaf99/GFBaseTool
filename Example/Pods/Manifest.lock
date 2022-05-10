@@ -1,0 +1,16 @@
+PODS:
+  - GFBaseTool (0.1.0)
+
+DEPENDENCIES:
+  - GFBaseTool (from `../`)
+
+EXTERNAL SOURCES:
+  GFBaseTool:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  GFBaseTool: 365d78b3d6a494ea66baee2c27d9de292af3c757
+
+PODFILE CHECKSUM: acf2bb9c4df209ec9c2a650b22262051bca581a5
+
+COCOAPODS: 1.11.3

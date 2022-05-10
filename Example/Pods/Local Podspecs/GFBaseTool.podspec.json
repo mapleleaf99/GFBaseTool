@@ -1,0 +1,24 @@
+{
+  "name": "GFBaseTool",
+  "version": "0.1.0",
+  "summary": "GFBaseTool是一个基础工具类",
+  "description": "GFBaseTool是一个基础工具类",
+  "homepage": "https://github.com/mapleleaf99/GFBaseTool",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "guofeifeng": "mapleleaf99@126.com"
+  },
+  "source": {
+    "git": "https://github.com/mapleleaf99/GFBaseTool.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "swift_versions": "5.0",
+  "source_files": "GFBaseTool/Classes/**/*",
+  "swift_version": "5.0"
+}

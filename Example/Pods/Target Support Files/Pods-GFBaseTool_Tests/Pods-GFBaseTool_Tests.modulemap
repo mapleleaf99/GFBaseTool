@@ -1,0 +1,6 @@
+framework module Pods_GFBaseTool_Tests {
+  umbrella header "Pods-GFBaseTool_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

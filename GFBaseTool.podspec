@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'GFBaseTool'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'GFBaseTool是一个基础工具类'
 
 # This description is used to generate tags and improve search results.
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-                        GFBaseTool是一个基础工具类
+                        GFBaseTool是一个基础工具类..
                         DESC
 
   s.homepage         = 'https://github.com/mapleleaf99/GFBaseTool'

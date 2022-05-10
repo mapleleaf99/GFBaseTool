@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'GFBaseTool_Example' do
+  pod 'GFBaseTool', :path => '../'
+
+  target 'GFBaseTool_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		01B4B2FA4980FD3F691A9156996198FC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
-		07C701F731E97A80EC99B9B3EA2A65EF /* ReplaceMe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F50B7A5E823B304F3F038504B881AD /* ReplaceMe.swift */; };
-		0B4E1D33610FCF931797A3C3FDF06EA2 /* GFBaseTool-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F46091C59DD8734F0DAA4A6D8E5BDE92 /* GFBaseTool-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0B4E1D33610FCF931797A3C3FDF06EA2 /* GFBaseTool-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D8563DC611F9964562C1EF1FFCF98D01 /* GFBaseTool-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2144DF5A05214B4B3E33E7F28F866D54 /* Pods-GFBaseTool_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE6E447FDECF4045EAE20B2A825B128 /* Pods-GFBaseTool_Example-dummy.m */; };
-		28CE06B6F4A25B9F8E2A580645CBF5FD /* GFBaseTool-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = AB9B11EC40B27101CCBD40120190904A /* GFBaseTool-dummy.m */; };
 		35D5EA8CD18148C949CF954154B456AA /* Pods-GFBaseTool_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F8B56AB353DDE441B8455E2473F8671 /* Pods-GFBaseTool_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3C25560CFAF7C131AA21D4147BA4C8CE /* GFBaseTool-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = ADB3B8ED4F4C0E3198BAB523BA7CAD5A /* GFBaseTool-dummy.m */; };
+		5A8392A4D18F4974300E3CA64A4BFB0C /* BaseResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6620F524C8120B84FEDFEB7F3165E098 /* BaseResponse.swift */; };
 		62D5A99FB05D1471FE837C9B48E13BED /* Pods-GFBaseTool_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7D3BE83B1D7820D4B4D058832BB20465 /* Pods-GFBaseTool_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E8FDF437864E4CA618D6B5365D401A3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		ED54969C92F8A8D9C10074EEA86B145F /* Pods-GFBaseTool_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3413DF3E856E90E884BDC00807352ED9 /* Pods-GFBaseTool_Tests-dummy.m */; };
@@ -39,37 +39,37 @@
 /* Begin PBXFileReference section */
 		03F0FC1C17BC7D521513A2103B9B9C15 /* Pods-GFBaseTool_Example */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-GFBaseTool_Example"; path = Pods_GFBaseTool_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		09503A9AAFF2998F9349514131FD79C1 /* Pods-GFBaseTool_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GFBaseTool_Example-acknowledgements.plist"; sourceTree = "<group>"; };
-		1F857DEA21B100764B6685FB1019C064 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
 		2193D2F15A41CD5C55A34D47E6262A49 /* Pods-GFBaseTool_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GFBaseTool_Tests-Info.plist"; sourceTree = "<group>"; };
 		236A3537FF99617F4D561D3B0C907D86 /* Pods-GFBaseTool_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-GFBaseTool_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		299A5F8E27B76C827E3EC1D97536E388 /* Pods-GFBaseTool_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GFBaseTool_Example-Info.plist"; sourceTree = "<group>"; };
 		3413DF3E856E90E884BDC00807352ED9 /* Pods-GFBaseTool_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-GFBaseTool_Tests-dummy.m"; sourceTree = "<group>"; };
 		3CE8BC8A8E092B9ACD9648233331690E /* Pods-GFBaseTool_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GFBaseTool_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		3E5632BEE81C7CF44844C72903678FD6 /* GFBaseTool.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = GFBaseTool.modulemap; sourceTree = "<group>"; };
 		3EBB328768255C6A1078DAE90E33EA0D /* Pods-GFBaseTool_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GFBaseTool_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		4BE6E447FDECF4045EAE20B2A825B128 /* Pods-GFBaseTool_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-GFBaseTool_Example-dummy.m"; sourceTree = "<group>"; };
 		4F8B56AB353DDE441B8455E2473F8671 /* Pods-GFBaseTool_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-GFBaseTool_Tests-umbrella.h"; sourceTree = "<group>"; };
-		55F50B7A5E823B304F3F038504B881AD /* ReplaceMe.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReplaceMe.swift; path = GFBaseTool/Classes/ReplaceMe.swift; sourceTree = "<group>"; };
 		6324F5F99C37314DC05191DBFB0B5BFA /* Pods-GFBaseTool_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-GFBaseTool_Example-frameworks.sh"; sourceTree = "<group>"; };
+		63E6FD4B791FDD2B09791548B10EC4E4 /* GFBaseTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GFBaseTool.debug.xcconfig; sourceTree = "<group>"; };
+		6620F524C8120B84FEDFEB7F3165E098 /* BaseResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BaseResponse.swift; path = GFBaseTool/Classes/NetWork/BaseResponse.swift; sourceTree = "<group>"; };
 		6AE6ED53F7427BF83DE2F48139478AED /* Pods-GFBaseTool_Tests */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-GFBaseTool_Tests"; path = Pods_GFBaseTool_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BFB63C153856E2A26D6ED0C00595E01 /* Pods-GFBaseTool_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-GFBaseTool_Example.modulemap"; sourceTree = "<group>"; };
 		6DA021226780FE4886AA168FB651AD98 /* Pods-GFBaseTool_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-GFBaseTool_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
+		6E59867B1F1AC9160B7C63AFCEAE6D4A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
 		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		7941670103F30606F0AE462B87EC99D1 /* GFBaseTool */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = GFBaseTool; path = GFBaseTool.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D3BE83B1D7820D4B4D058832BB20465 /* Pods-GFBaseTool_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-GFBaseTool_Example-umbrella.h"; sourceTree = "<group>"; };
-		85F680AA9DEFAF1DF606229E3F98B2FA /* GFBaseTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GFBaseTool.release.xcconfig; sourceTree = "<group>"; };
-		98470B2EE83DA174556D5AF4A72F9D4B /* GFBaseTool-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "GFBaseTool-prefix.pch"; sourceTree = "<group>"; };
+		8409546D06504551A148EBA68C564E4A /* GFBaseTool.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GFBaseTool.release.xcconfig; sourceTree = "<group>"; };
+		92EC83E957B97F39A7539D5A9C07A995 /* GFBaseTool-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "GFBaseTool-Info.plist"; sourceTree = "<group>"; };
 		99E2E3B44CC1A7496469F4009985411D /* Pods-GFBaseTool_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GFBaseTool_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		9F241AB4B85C22FE594039E1884721D0 /* GFBaseTool.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = GFBaseTool.modulemap; sourceTree = "<group>"; };
+		A455CE261C15016B16916C8781DD6446 /* GFBaseTool-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "GFBaseTool-prefix.pch"; sourceTree = "<group>"; };
 		A6B186EF5355F2DADF79F2E7E4B58E4F /* Pods-GFBaseTool_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-GFBaseTool_Example.release.xcconfig"; sourceTree = "<group>"; };
-		AA1272321DA461053B84B5CC5D41107E /* GFBaseTool.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = GFBaseTool.debug.xcconfig; sourceTree = "<group>"; };
-		AB9B11EC40B27101CCBD40120190904A /* GFBaseTool-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "GFBaseTool-dummy.m"; sourceTree = "<group>"; };
-		BDDDA7F7EFB37DC762809E831C62EB5A /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; path = README.md; sourceTree = "<group>"; };
-		C5B1D6A1CD11B1161FD78B4BAE8195EB /* GFBaseTool.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = GFBaseTool.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		C6B09E64283C78F7CF3F1DB6CF18DC20 /* GFBaseTool-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "GFBaseTool-Info.plist"; sourceTree = "<group>"; };
+		A8FFECF98B91489CE2B02F258DCD100D /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		ADB3B8ED4F4C0E3198BAB523BA7CAD5A /* GFBaseTool-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "GFBaseTool-dummy.m"; sourceTree = "<group>"; };
+		D8563DC611F9964562C1EF1FFCF98D01 /* GFBaseTool-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "GFBaseTool-umbrella.h"; sourceTree = "<group>"; };
 		DA349BB02DF04A4ACF321EF08D9C8333 /* Pods-GFBaseTool_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-GFBaseTool_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
 		E74D57A1C8BF45682727EED28D7FB49F /* Pods-GFBaseTool_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-GFBaseTool_Tests.modulemap"; sourceTree = "<group>"; };
-		F46091C59DD8734F0DAA4A6D8E5BDE92 /* GFBaseTool-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "GFBaseTool-umbrella.h"; sourceTree = "<group>"; };
+		F59FE2FAD2A975F8D47467D27C7DED5F /* GFBaseTool.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = GFBaseTool.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,14 +100,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3CC72F6F7E207650C0549A8D5F23C9FA /* Pod */ = {
+		2230F58F74EF917DB720E757412A3CEF /* GFBaseTool */ = {
 			isa = PBXGroup;
 			children = (
-				C5B1D6A1CD11B1161FD78B4BAE8195EB /* GFBaseTool.podspec */,
-				1F857DEA21B100764B6685FB1019C064 /* LICENSE */,
-				BDDDA7F7EFB37DC762809E831C62EB5A /* README.md */,
+				6620F524C8120B84FEDFEB7F3165E098 /* BaseResponse.swift */,
+				B4C7434915EE6721D5490D52F618E7A6 /* Pod */,
+				B64BE9B4BEB48A3ED9F24D786D95B1FA /* Support Files */,
 			);
-			name = Pod;
+			name = GFBaseTool;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
@@ -135,21 +136,6 @@
 			path = "Target Support Files/Pods-GFBaseTool_Example";
 			sourceTree = "<group>";
 		};
-		6628BE5C77086EB4265B8DAA85EDFCB3 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				9F241AB4B85C22FE594039E1884721D0 /* GFBaseTool.modulemap */,
-				AB9B11EC40B27101CCBD40120190904A /* GFBaseTool-dummy.m */,
-				C6B09E64283C78F7CF3F1DB6CF18DC20 /* GFBaseTool-Info.plist */,
-				98470B2EE83DA174556D5AF4A72F9D4B /* GFBaseTool-prefix.pch */,
-				F46091C59DD8734F0DAA4A6D8E5BDE92 /* GFBaseTool-umbrella.h */,
-				AA1272321DA461053B84B5CC5D41107E /* GFBaseTool.debug.xcconfig */,
-				85F680AA9DEFAF1DF606229E3F98B2FA /* GFBaseTool.release.xcconfig */,
-			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/GFBaseTool";
-			sourceTree = "<group>";
-		};
 		A3298A9CDBAA7F94BAF78B1B796DCC10 /* Pods-GFBaseTool_Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,23 +152,37 @@
 			path = "Target Support Files/Pods-GFBaseTool_Tests";
 			sourceTree = "<group>";
 		};
-		A9C504A01E364994E963F855DB8C4251 /* GFBaseTool */ = {
-			isa = PBXGroup;
-			children = (
-				55F50B7A5E823B304F3F038504B881AD /* ReplaceMe.swift */,
-				3CC72F6F7E207650C0549A8D5F23C9FA /* Pod */,
-				6628BE5C77086EB4265B8DAA85EDFCB3 /* Support Files */,
-			);
-			name = GFBaseTool;
-			path = ../..;
-			sourceTree = "<group>";
-		};
 		AD7F4965EC550FF40282D35DE3987E08 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				A9C504A01E364994E963F855DB8C4251 /* GFBaseTool */,
+				2230F58F74EF917DB720E757412A3CEF /* GFBaseTool */,
 			);
 			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		B4C7434915EE6721D5490D52F618E7A6 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				F59FE2FAD2A975F8D47467D27C7DED5F /* GFBaseTool.podspec */,
+				A8FFECF98B91489CE2B02F258DCD100D /* LICENSE */,
+				6E59867B1F1AC9160B7C63AFCEAE6D4A /* README.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		B64BE9B4BEB48A3ED9F24D786D95B1FA /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				3E5632BEE81C7CF44844C72903678FD6 /* GFBaseTool.modulemap */,
+				ADB3B8ED4F4C0E3198BAB523BA7CAD5A /* GFBaseTool-dummy.m */,
+				92EC83E957B97F39A7539D5A9C07A995 /* GFBaseTool-Info.plist */,
+				A455CE261C15016B16916C8781DD6446 /* GFBaseTool-prefix.pch */,
+				D8563DC611F9964562C1EF1FFCF98D01 /* GFBaseTool-umbrella.h */,
+				63E6FD4B791FDD2B09791548B10EC4E4 /* GFBaseTool.debug.xcconfig */,
+				8409546D06504551A148EBA68C564E4A /* GFBaseTool.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/GFBaseTool";
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
@@ -296,7 +296,7 @@
 			buildConfigurationList = DAF08B7FA13874EEC815789307564F8B /* Build configuration list for PBXNativeTarget "GFBaseTool" */;
 			buildPhases = (
 				83ED8366FD1B234FC49798802C75CEDF /* Headers */,
-				A25768DC14731CB1564A9ADCB15AAF53 /* Sources */,
+				558FA7F8984F75BF0740A8B1051EB17E /* Sources */,
 				0C11DDAB10561F545507EB0643DFF372 /* Frameworks */,
 				5E1EA1D6D3329CDB10A875C4C095842D /* Resources */,
 			);
@@ -371,20 +371,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		558FA7F8984F75BF0740A8B1051EB17E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A8392A4D18F4974300E3CA64A4BFB0C /* BaseResponse.swift in Sources */,
+				3C25560CFAF7C131AA21D4147BA4C8CE /* GFBaseTool-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		88D7EA9726B69EE5344936ED84155A76 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				2144DF5A05214B4B3E33E7F28F866D54 /* Pods-GFBaseTool_Example-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A25768DC14731CB1564A9ADCB15AAF53 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				28CE06B6F4A25B9F8E2A580645CBF5FD /* GFBaseTool-dummy.m in Sources */,
-				07C701F731E97A80EC99B9B3EA2A65EF /* ReplaceMe.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -408,7 +408,7 @@
 /* Begin XCBuildConfiguration section */
 		167CFFD1504FB48F35FEE76233DB74B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AA1272321DA461053B84B5CC5D41107E /* GFBaseTool.debug.xcconfig */;
+			baseConfigurationReference = 63E6FD4B791FDD2B09791548B10EC4E4 /* GFBaseTool.debug.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -568,7 +568,7 @@
 		};
 		95235FADF3F700AD41E997BFE9BFEF70 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 85F680AA9DEFAF1DF606229E3F98B2FA /* GFBaseTool.release.xcconfig */;
+			baseConfigurationReference = 8409546D06504551A148EBA68C564E4A /* GFBaseTool.release.xcconfig */;
 			buildSettings = {
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";

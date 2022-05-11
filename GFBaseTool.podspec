@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'GFBaseTool'
-  s.version          = '0.1.6'
+  s.version          = '0.1.7'
   s.summary          = 'GFBaseTool是一个基础工具类'
 
 # This description is used to generate tags and improve search results.
@@ -40,4 +40,5 @@ Pod::Spec.new do |s|
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
    s.dependency 'Alamofire', '~> 5.6.1'
+   s.dependency 'Toast-Swift', '5.0.1'
 end

@@ -16,7 +16,7 @@ class NetWork: NSObject {
     
     ///isDataList: data返回值是数组
     private func baseRequestWithModel<T: Codable>(url: String, method: HTTPMethod, parameters: [String: Any]?, token: String?, type: T.Type, success:((T) -> Void)?, failure: ((Error?) -> Void)?) {
-        let urlStr = NetWork.baseUrl + url
+        let urlStr = baseUrl + url
         
         var headers: HTTPHeaders?
         
@@ -64,7 +64,7 @@ class NetWork: NSObject {
             }
     }
     
-    private static let baseUrl: String = "http://43.128.102.151:10000"
+    var baseUrl: String = ""
 
     private var defaultHeaders: HTTPHeaders {
         let headers: HTTPHeaders = ["device-type": "ios", "device-info": ""]

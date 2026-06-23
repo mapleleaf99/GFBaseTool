@@ -1,5 +1,5 @@
 import XCTest
-import GFBaseTool
+import MLBaseTool
 
 class Tests: XCTestCase {
 
@@ -12,11 +12,11 @@ class Tests: XCTestCase {
     }
 
     func testJSONConversion() {
-        let dic: [String: Any] = ["name": "GFBaseTool", "version": 1]
+        let dic: [String: Any] = ["name": "MLBaseTool", "version": 1]
         let json = ToolManager.getJSONStringFromDic(dic: dic)
         XCTAssertFalse(json.isEmpty)
         let parsed = ToolManager.getDicFromJSONString(jsonString: json)
-        XCTAssertEqual(parsed?["name"] as? String, "GFBaseTool")
+        XCTAssertEqual(parsed?["name"] as? String, "MLBaseTool")
     }
 
     func testCodableUtil() {
@@ -45,9 +45,9 @@ class Tests: XCTestCase {
     }
 
     func testUserDefaultsUtil() {
-        UserDefaultsUtil.set("test_value", forKey: "gf_test_key")
-        XCTAssertEqual(UserDefaultsUtil.string(forKey: "gf_test_key"), "test_value")
-        UserDefaultsUtil.remove(forKey: "gf_test_key")
+        UserDefaultsUtil.set("test_value", forKey: "ml_test_key")
+        XCTAssertEqual(UserDefaultsUtil.string(forKey: "ml_test_key"), "test_value")
+        UserDefaultsUtil.remove(forKey: "ml_test_key")
     }
 
     func testArraySafeSubscript() {
@@ -65,5 +65,17 @@ class Tests: XCTestCase {
         let debouncer = Debouncer(delay: 0.1)
         debouncer.call { exp.fulfill() }
         waitForExpectations(timeout: 1)
+    }
+
+    func testKeychainUtil() {
+        let key = "ml_test_keychain"
+        XCTAssertTrue(KeychainUtil.save("secret_token", forKey: key))
+        XCTAssertEqual(KeychainUtil.string(forKey: key), "secret_token")
+        XCTAssertTrue(KeychainUtil.delete(forKey: key))
+    }
+
+    func testFileUtil() {
+        XCTAssertFalse(FileUtil.cachesPath.isEmpty)
+        XCTAssertFalse(FileUtil.cacheSizeString().isEmpty)
     }
 }

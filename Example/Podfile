@@ -10,12 +10,10 @@ post_install do |installer|
   end
 end
 
-target 'GFBaseTool_Example' do
-  pod 'GFBaseTool', :path => '../'
+target 'MLBaseTool_Example' do
+  pod 'MLBaseTool', :path => '../'
 
-  target 'GFBaseTool_Tests' do
+  target 'MLBaseTool_Tests' do
     inherit! :search_paths
-
-    
   end
 end

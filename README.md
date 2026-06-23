@@ -1,10 +1,10 @@
-# GFBaseTool
+# MLBaseTool
 
-[![Version](https://img.shields.io/cocoapods/v/GFBaseTool.svg?style=flat)](https://cocoapods.org/pods/GFBaseTool)
-[![License](https://img.shields.io/cocoapods/l/GFBaseTool.svg?style=flat)](https://cocoapods.org/pods/GFBaseTool)
-[![Platform](https://img.shields.io/cocoapods/p/GFBaseTool.svg?style=flat)](https://cocoapods.org/pods/GFBaseTool)
+[![Version](https://img.shields.io/cocoapods/v/MLBaseTool.svg?style=flat)](https://cocoapods.org/pods/MLBaseTool)
+[![License](https://img.shields.io/cocoapods/l/MLBaseTool.svg?style=flat)](https://cocoapods.org/pods/MLBaseTool)
+[![Platform](https://img.shields.io/cocoapods/p/MLBaseTool.svg?style=flat)](https://cocoapods.org/pods/MLBaseTool)
 
-GFBaseTool 是一个面向 iOS 项目的**基础工具库**，封装了日常开发中高频使用的 Extension、线程调度、Toast 提示、网络请求、自定义控件等能力，帮助快速搭建项目基础设施。
+MLBaseTool 是一个面向 iOS 项目的**基础工具库**，封装了日常开发中高频使用的 Extension、线程调度、Toast 提示、网络请求、自定义控件等能力，帮助快速搭建项目基础设施。
 
 - **语言**：Swift 5.0+
 - **最低系统**：iOS 12.0+
@@ -34,21 +34,21 @@ platform :ios, '12.0'
 use_frameworks!
 
 target 'YourApp' do
-  pod 'GFBaseTool'
+  pod 'MLBaseTool'
 end
 ```
 
 ### 仅安装基础工具（不含网络层）
 
 ```ruby
-pod 'GFBaseTool', :subspecs => ['Core']
+pod 'MLBaseTool', :subspecs => ['Core']
 ```
 
 安装后执行：
 
 ```bash
 cd Example && pod install   # 运行示例工程
-pod lib lint GFBaseTool.podspec  # 校验 podspec
+pod lib lint MLBaseTool.podspec  # 校验 podspec
 ```
 
 ---
@@ -56,17 +56,17 @@ pod lib lint GFBaseTool.podspec  # 校验 podspec
 ## 模块结构
 
 ```
-GFBaseTool/
+MLBaseTool/
 ├── Core（基础模块）
 │   ├── Config.swift              # 屏幕、安全区、颜色、字体、日志
-│   ├── GFGCD.swift               # 线程调度
+│   ├── MLGCD.swift               # 线程调度
 │   ├── CodableUtil.swift         # JSON 模型转换
 │   ├── ToolManager.swift         # 打电话、JSON、敏感词
 │   ├── DeviceUtil.swift          # 设备信息
 │   ├── UserDefaultsUtil.swift    # 本地存储
 │   ├── Debouncer.swift           # 防抖 / 节流
 │   ├── Extension/                # 各类扩展
-│   ├── CustomView/               # GFButton、GFTextField、GFDottedLine
+│   ├── CustomView/               # MLButton、MLTextField、MLDottedLine
 │   └── Toast/                    # 提示封装
 └── Network（网络模块）
     ├── NetworkConfiguration.swift
@@ -81,12 +81,12 @@ GFBaseTool/
 ### 1. 在 AppDelegate 中配置（推荐）
 
 ```swift
-import GFBaseTool
+import MLBaseTool
 
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
     // 网络配置（使用 Network 模块时）
-    GFNetworkConfiguration.shared = GFNetworkConfiguration(
+    MLNetworkConfiguration.shared = MLNetworkConfiguration(
         baseURL: "https://api.yourserver.com",
         successCode: 0,
         showLoading: true
@@ -102,7 +102,7 @@ func application(_ application: UIApplication, didFinishLaunchingWithOptions lau
 ### 2. 常用代码片段
 
 ```swift
-import GFBaseTool
+import MLBaseTool
 
 // 安全区与布局
 let navH = kNavigationHeight
@@ -115,8 +115,8 @@ let color = UIColor(hex: "#FF5500")
 if phone.isPhoneNumber { ... }
 
 // 线程
-GFGCD.main { /* 更新 UI */ }
-GFGCD.mainAfter(1.0) { /* 延时执行 */ }
+MLGCD.main { /* 更新 UI */ }
+MLGCD.mainAfter(1.0) { /* 延时执行 */ }
 
 // Toast
 Toast.show("操作成功")
@@ -124,7 +124,7 @@ Toast.showProgress()
 Toast.hiddenProgress()
 
 // 日志（仅 Debug）
-GFFLog("调试信息")
+MLLog("调试信息")
 ```
 
 ---
@@ -144,7 +144,7 @@ GFFLog("调试信息")
 | `Font()` / `FontMedium()` / `FontBold()` | 苹方字体 |
 | `fontScale()` | 按屏宽等比缩放 |
 | `AppVersion` / `AppBundleID` | App 信息 |
-| `GFFLog()` | Debug 日志 |
+| `MLLog()` | Debug 日志 |
 
 ### Extension — 扩展
 
@@ -160,13 +160,13 @@ GFFLog("调试信息")
 | `Dictionary` | 转 JSON 字符串 |
 | `Optional` | `isNilOrEmpty`、`or()` |
 
-### GFGCD — 线程
+### MLGCD — 线程
 
 ```swift
-GFGCD.main { }                    // 主线程
-GFGCD.async { }                   // 子线程
-GFGCD.mainAfter(2.0) { }          // 主线程延时
-GFGCD.once(token: "key") { }      // 只执行一次
+MLGCD.main { }                    // 主线程
+MLGCD.async { }                   // 子线程
+MLGCD.mainAfter(2.0) { }          // 主线程延时
+MLGCD.once(token: "key") { }      // 只执行一次
 ```
 
 ### CodableUtil — 模型转换
@@ -235,29 +235,29 @@ Toast.hiddenProgress()
 
 ### 自定义控件
 
-**GFButton** — 支持图文多种布局、点击/长按回调、按下动画
+**MLButton** — 支持图文多种布局、点击/长按回调、按下动画
 
 ```swift
-let btn = GFButton(type: .bottomText)
+let btn = MLButton(type: .bottomText)
 btn.setTitle("标题", for: .normal)
 btn.buttonClick { button in }
 btn.onLongPress { button in }
 ```
 
-**GFTextField** — 占位符颜色、左边距、字数限制、Block 回调
+**MLTextField** — 占位符颜色、左边距、字数限制、Block 回调
 
 ```swift
-let field = GFTextField(frame: .zero)
+let field = MLTextField(frame: .zero)
 field.placeholder = "请输入"
 field.placeholderColor = .gray
 field.maxCount = 11
 field.textChange { textField in }
 ```
 
-**GFDottedLine** — 水平虚线
+**MLDottedLine** — 水平虚线
 
 ```swift
-let line = GFDottedLine(frame: CGRect(x: 0, y: 0, width: 300, height: 1))
+let line = MLDottedLine(frame: CGRect(x: 0, y: 0, width: 300, height: 1))
 line.strokeColor = .lightGray
 ```
 
@@ -275,8 +275,8 @@ line.strokeColor = .lightGray
 
 ```swift
 // 全局配置
-GFNetworkConfiguration.shared.baseURL = "https://api.example.com"
-GFNetworkConfiguration.shared.successCode = 0
+MLNetworkConfiguration.shared.baseURL = "https://api.example.com"
+MLNetworkConfiguration.shared.successCode = 0
 
 struct User: Codable { var name: String }
 
@@ -300,7 +300,7 @@ NetWork.share.getUrlWithModel(
 )
 ```
 
-错误类型 `GFNetworkError`：
+错误类型 `MLNetworkError`：
 
 - `.business(code:message:)` — 业务错误（code 非成功码）
 - `.emptyData` — data 为空
@@ -313,13 +313,13 @@ NetWork.share.getUrlWithModel(
 仓库自带完整示例，覆盖所有模块：
 
 ```bash
-git clone https://github.com/mapleleaf99/GFBaseTool.git
-cd GFBaseTool/Example
+git clone https://github.com/mapleleaf99/MLBaseTool.git
+cd MLBaseTool/Example
 pod install
-open GFBaseTool.xcworkspace
+open MLBaseTool.xcworkspace
 ```
 
-运行 `GFBaseTool_Example`，首页为功能列表，点击进入各模块演示：
+运行 `MLBaseTool_Example`，首页为功能列表，点击进入各模块演示：
 
 | 示例页 | 演示内容 |
 |--------|----------|
@@ -333,7 +333,7 @@ open GFBaseTool.xcworkspace
 | Codable | 字典/Model 互转 |
 | UserDefaults | Codable 存储 |
 | 防抖与节流 | Debouncer / Throttler |
-| 自定义控件 | GFButton、GFTextField、GFDottedLine |
+| 自定义控件 | MLButton、MLTextField、MLDottedLine |
 | 网络请求 | 配置说明、响应解析 |
 | 工具方法 | JSON、打电话 |
 
@@ -370,6 +370,6 @@ open GFBaseTool.xcworkspace
 
 **作者**：guofeifeng (mapleleaf99@126.com)
 
-**仓库**：https://github.com/mapleleaf99/GFBaseTool
+**仓库**：https://github.com/mapleleaf99/MLBaseTool
 
 **许可**：MIT License，详见 [LICENSE](LICENSE)

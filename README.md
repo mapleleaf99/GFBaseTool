@@ -4,11 +4,12 @@
 [![License](https://img.shields.io/cocoapods/l/MLBaseTool.svg?style=flat)](https://cocoapods.org/pods/MLBaseTool)
 [![Platform](https://img.shields.io/cocoapods/p/MLBaseTool.svg?style=flat)](https://cocoapods.org/pods/MLBaseTool)
 
-MLBaseTool 是一个面向 iOS 项目的**基础工具库**，封装了日常开发中高频使用的 Extension、线程调度、Toast 提示、网络请求、自定义控件等能力，帮助快速搭建项目基础设施。
+MLBaseTool 是一个面向 iOS 项目的**基础工具库**，封装 Extension、线程调度、Toast、网络、存储、权限、弹窗、富文本、UI 组件等能力，帮助快速搭建项目基础设施。
 
 - **语言**：Swift 5.0+
 - **最低系统**：iOS 12.0+
 - **依赖管理**：CocoaPods
+- **当前版本**：0.3.0
 
 ---
 
@@ -27,28 +28,39 @@ MLBaseTool 是一个面向 iOS 项目的**基础工具库**，封装了日常开
 
 ## 安装
 
-### 完整安装（Core + Network）
+### 完整安装（默认全部子模块）
 
 ```ruby
 platform :ios, '12.0'
 use_frameworks!
 
 target 'YourApp' do
-  pod 'MLBaseTool'
+  pod 'MLBaseTool', '~> 0.3.0'
 end
 ```
 
-### 仅安装基础工具（不含网络层）
+### 按需安装子模块
 
 ```ruby
+# 仅基础工具
 pod 'MLBaseTool', :subspecs => ['Core']
+
+# 基础 + 存储 + UI
+pod 'MLBaseTool', :subspecs => ['Core', 'Storage', 'UI']
 ```
 
-安装后执行：
+| Subspec | 说明 | 主要依赖 |
+|---------|------|----------|
+| `Core` | Extension、GCD、Toast、自定义控件、富文本等 | Toast-Swift |
+| `Storage` | Keychain、文件缓存 | Core |
+| `Permission` | 相机、相册、定位、麦克风、通知权限 | Core |
+| `UI` | 空状态、键盘、弹窗、渐变组件 | Core |
+| `Network` | 网络请求封装 | Core、Alamofire |
+
+安装后校验：
 
 ```bash
-cd Example && pod install   # 运行示例工程
-pod lib lint MLBaseTool.podspec  # 校验 podspec
+pod lib lint MLBaseTool.podspec
 ```
 
 ---
@@ -57,74 +69,73 @@ pod lib lint MLBaseTool.podspec  # 校验 podspec
 
 ```
 MLBaseTool/
-├── Core（基础模块）
-│   ├── Config.swift              # 屏幕、安全区、颜色、字体、日志
-│   ├── MLGCD.swift               # 线程调度
-│   ├── CodableUtil.swift         # JSON 模型转换
-│   ├── ToolManager.swift         # 打电话、JSON、敏感词
-│   ├── DeviceUtil.swift          # 设备信息
-│   ├── UserDefaultsUtil.swift    # 本地存储
-│   ├── Debouncer.swift           # 防抖 / 节流
-│   ├── Extension/                # 各类扩展
-│   ├── CustomView/               # MLButton、MLTextField、MLDottedLine
-│   └── Toast/                    # 提示封装
-└── Network（网络模块）
-    ├── NetworkConfiguration.swift
-    ├── BaseResponse.swift
-    └── NetWork.swift
+├── Core
+│   ├── Config / MLGCD / CodableUtil / ToolManager
+│   ├── DeviceUtil / UserDefaultsUtil / Debouncer / AppUtil
+│   ├── Extension/          # String、Date、UIView、UIColor 等
+│   ├── Attributed/         # 链式富文本 MLAttributedMaker
+│   ├── CustomView/         # MLButton、MLTextField、MLDottedLine
+│   └── Toast/
+├── Storage
+│   ├── KeychainUtil
+│   └── FileUtil
+├── Permission
+│   └── PermissionUtil
+├── UI
+│   ├── MLEmptyView / KeyboardUtil / MLKeyboardManager
+│   ├── MLGradientView 系列
+│   └── Alert/            # MLAlertView、MLAlertObject、MLAlertManager
+└── Network
+    ├── MLNetworkConfiguration
+    ├── BaseResponse
+    └── NetWork
 ```
 
 ---
 
 ## 快速开始
 
-### 1. 在 AppDelegate 中配置（推荐）
+### AppDelegate 配置
 
 ```swift
 import MLBaseTool
 
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-    // 网络配置（使用 Network 模块时）
     MLNetworkConfiguration.shared = MLNetworkConfiguration(
         baseURL: "https://api.yourserver.com",
         successCode: 0,
         showLoading: true
     )
 
-    // 加载敏感词（可选，需在 bundle 中放置 sensitiveWord.txt）
     ToolManager.reloadSensitiveWords()
-
     return true
 }
 ```
 
-### 2. 常用代码片段
+### 常用片段
 
 ```swift
 import MLBaseTool
 
-// 安全区与布局
+// 布局与安全区
 let navH = kNavigationHeight
-let tabH = kTabBarHeight
 
-// 颜色
+// 颜色与字体
 let color = UIColor(hex: "#FF5500")
+let titleFont = FontMedium(16)
 
-// 字符串校验
-if phone.isPhoneNumber { ... }
+// 线程与提示
+MLGCD.main { Toast.show("完成") }
 
-// 线程
-MLGCD.main { /* 更新 UI */ }
-MLGCD.mainAfter(1.0) { /* 延时执行 */ }
+// 富文本
+let att = "标题".ml_makeAttributed { make in
+    make.font(Font(14)).foregroundColor(.gray).allRange()
+}
 
-// Toast
-Toast.show("操作成功")
-Toast.showProgress()
-Toast.hiddenProgress()
-
-// 日志（仅 Debug）
-MLLog("调试信息")
+// 弹窗
+let alert = MyAlertObject(param: "提示")
+alert.showAlertObject()
 ```
 
 ---
@@ -136,181 +147,119 @@ MLLog("调试信息")
 | API | 说明 |
 |-----|------|
 | `ScreenWidth` / `ScreenHeight` | 屏幕宽高 |
-| `safeAreaTop` / `safeAreaBottom` | 安全区高度 |
-| `kNavigationHeight` | 导航栏总高度 |
-| `kTabBarHeight` | TabBar 总高度 |
-| `isPhoneX` | 是否全面屏 |
-| `kRGBColorFromHex(rgbValue:)` | 整型 Hex 转颜色 |
-| `Font()` / `FontMedium()` / `FontBold()` | 苹方字体 |
-| `fontScale()` | 按屏宽等比缩放 |
-| `AppVersion` / `AppBundleID` | App 信息 |
+| `safeAreaTop` / `safeAreaBottom` | 安全区 |
+| `kNavigationHeight` / `kTabBarHeight` | 导航栏、TabBar 高度 |
+| `kRGBColorFromHex` / `Font()` | 颜色、苹方字体 |
 | `MLLog()` | Debug 日志 |
 
-### Extension — 扩展
+### Extension
 
-| 扩展 | 主要能力 |
-|------|----------|
-| `String` | 本地化、尺寸计算、手机号/邮箱/URL/身份证校验 |
-| `Date` | 时间戳、格式化、月份偏移 |
-| `UIColor` | Hex 字符串互转 |
-| `UIImage` | 九宫格拉伸、纯色图、压缩、圆角 |
-| `UIView` | frame 快捷属性、圆角边框、渐变、抖动 |
-| `UIApplication` | 获取当前 keyWindow |
-| `Array` | 安全下标 |
-| `Dictionary` | 转 JSON 字符串 |
-| `Optional` | `isNilOrEmpty`、`or()` |
+| 扩展 | 能力 |
+|------|------|
+| `String` | 校验、尺寸计算、`ml_makeAttributed`、日期解析 |
+| `Date` | 时间戳、格式化、`ml_dateModel` |
+| `UIColor` / `UIImage` / `UIView` | Hex、压缩、圆角阴影、`ml_onTap`、Xib 加载 |
+| `UIViewController` | `ml_currentViewController()` 等 |
+| `Array` | 安全下标、`ml_unique()` |
 
-### MLGCD — 线程
+### 富文本 — MLAttributedMaker
 
 ```swift
-MLGCD.main { }                    // 主线程
-MLGCD.async { }                   // 子线程
-MLGCD.mainAfter(2.0) { }          // 主线程延时
-MLGCD.once(token: "key") { }      // 只执行一次
+let att = "Hello MLBaseTool".ml_makeAttributed { make in
+    make.font(Font(16)).foregroundColor(.darkGray).allRange()
+    make.foregroundColor(.systemBlue).font(FontBold(16)).inRange(of: "ML")
+}
+
+// 关键词高亮
+NSMutableAttributedString.ml_text("搜索内容").ml_highlight(keyword: "搜索", color: .red)
+
+// HTML 转富文本
+let html = NSMutableAttributedString.ml_fromHTML("<b>粗体</b>", fontSize: 14)
 ```
 
-### CodableUtil — 模型转换
+### Alert — 弹窗体系
 
 ```swift
-struct User: Codable { var name: String; var age: Int }
+// 业务弹窗继承 MLAlertObject
+class MyAlert: MLAlertObject {
+    override func showAlertViewClass(param: Any?) -> MLAlertView? {
+        let view = MyAlertView()
+        view.updateParam(param)
+        return view
+    }
+}
 
-let user = CodableUtil.dicWithModel(model: User.self, dic: ["name": "Tom", "age": 18])
-let json = CodableUtil.modelToJSONString(user)
-let dic  = CodableUtil.modelToDic(user)
+let alert = MyAlert(param: "内容")
+alert.priority = .hight
+alert.isClickEmptyForClose = true
+alert.showAlertObject()
 ```
 
-### ToolManager — 工具方法
+### UI 组件
 
 ```swift
-// 打电话（弹窗确认）
-ToolManager.callPhone(titleStr: "拨打客服？", phoneNumStr: "10086", viewCtrl: self)
+// 空状态
+view.ml_showEmpty(message: "暂无数据", buttonTitle: "重试") { /* 刷新 */ }
+view.ml_hideEmpty()
 
-// JSON 互转
-let json = ToolManager.getJSONStringFromDic(dic: ["key": "value"])
-let dic  = ToolManager.getDicFromJSONString(jsonString: json)
+// 键盘
+KeyboardUtil.enableDismissOnTap(view)
+KeyboardUtil.adjustScrollView(scrollView)
 
-// 敏感词（需在 bundle 添加 sensitiveWord.txt，逗号分隔）
-let pass = ToolManager.checkSensitiveWords(wordStr: "内容")
-let text = ToolManager.checkSensitiveWordsReplacedWithAsterisk(wordStr: "内容")
+// 渐变
+let gradient = MLGradientView()
+gradient.ml_setColors([.red, .orange])
+gradient.ml_setDirection(.vertical)
 ```
 
-### DeviceUtil — 设备信息
+### Storage
 
 ```swift
-DeviceUtil.modelName       // 设备型号
-DeviceUtil.systemVersion   // 系统版本
-DeviceUtil.isSimulator     // 是否模拟器
-DeviceUtil.idfv            // IDFV
+KeychainUtil.save(token, forKey: "user_token")
+let token = KeychainUtil.read(forKey: "user_token")
+
+FileUtil.cacheSize()   // 缓存大小
+FileUtil.clearCache()  // 清理缓存
 ```
 
-### UserDefaultsUtil — 本地存储
+### Permission
 
 ```swift
-UserDefaultsUtil.set("value", forKey: "key")
-UserDefaultsUtil.string(forKey: "key")
-
-struct Settings: Codable { var theme: String }
-UserDefaultsUtil.setCodable(settings, forKey: "settings")
-let s = UserDefaultsUtil.codable(Settings.self, forKey: "settings")
-```
-
-### Debouncer / Throttler — 防抖节流
-
-```swift
-let debouncer = Debouncer(delay: 0.3)
-debouncer.call { /* 搜索请求 */ }
-
-let throttler = Throttler(interval: 1.0)
-throttler.call { /* 防重复点击 */ }
-```
-
-### Toast — 提示
-
-```swift
-Toast.show("提示文字")
-Toast.show("底部提示", position: .bottom)
-Toast.showProgress()
-Toast.hiddenProgress()
-```
-
-### 自定义控件
-
-**MLButton** — 支持图文多种布局、点击/长按回调、按下动画
-
-```swift
-let btn = MLButton(type: .bottomText)
-btn.setTitle("标题", for: .normal)
-btn.buttonClick { button in }
-btn.onLongPress { button in }
-```
-
-**MLTextField** — 占位符颜色、左边距、字数限制、Block 回调
-
-```swift
-let field = MLTextField(frame: .zero)
-field.placeholder = "请输入"
-field.placeholderColor = .gray
-field.maxCount = 11
-field.textChange { textField in }
-```
-
-**MLDottedLine** — 水平虚线
-
-```swift
-let line = MLDottedLine(frame: CGRect(x: 0, y: 0, width: 300, height: 1))
-line.strokeColor = .lightGray
-```
-
-### Network — 网络请求
-
-后端需返回统一格式：
-
-```json
-{
-  "code": 0,
-  "data": { },
-  "msg": "success"
+PermissionUtil.request(.camera) { status in
+    switch status {
+    case .authorized: break
+    case .denied: PermissionUtil.openSettings()
+    default: break
+    }
 }
 ```
 
+### Network
+
+后端统一格式：`{ "code": 0, "data": {}, "msg": "success" }`
+
 ```swift
-// 全局配置
-MLNetworkConfiguration.shared.baseURL = "https://api.example.com"
-MLNetworkConfiguration.shared.successCode = 0
-
-struct User: Codable { var name: String }
-
-// POST（JSON Body）
 NetWork.share.postUrlWithModel(
     path: "/user/info",
     type: User.self,
     param: ["id": "1"],
     token: "your_token",
-    showLoading: true,
     success: { user in },
-    failure: { error in }
-)
-
-// GET（URL Query）
-NetWork.share.getUrlWithModel(
-    path: "/user/list",
-    type: [User].self,
-    success: { list in },
     failure: { error in }
 )
 ```
 
-错误类型 `MLNetworkError`：
+### 其他
 
-- `.business(code:message:)` — 业务错误（code 非成功码）
-- `.emptyData` — data 为空
-- `.decodeFailed` — 解析失败
+- **MLGCD**：`main` / `async` / `mainAfter` / `once`
+- **CodableUtil**：字典、JSON、Model 互转
+- **ToolManager**：打电话、JSON、敏感词过滤
+- **Debouncer / Throttler**：防抖、节流
+- **Toast**：文字提示与 Loading
 
 ---
 
 ## Example 示例工程
-
-仓库自带完整示例，覆盖所有模块：
 
 ```bash
 git clone https://github.com/mapleleaf99/MLBaseTool.git
@@ -319,56 +268,47 @@ pod install
 open MLBaseTool.xcworkspace
 ```
 
-运行 `MLBaseTool_Example`，首页为功能列表，点击进入各模块演示：
-
-| 示例页 | 演示内容 |
-|--------|----------|
-| 基础配置 | 屏幕、安全区、App/设备信息 |
-| Toast | 文字提示、Loading |
-| 字符串校验 | 手机号、邮箱、敏感词 |
-| 日期时间 | 时间戳、格式化 |
-| 颜色与图片 | Hex 颜色、纯色图 |
-| UIView 扩展 | 渐变、抖动、圆角 |
-| GCD 线程 | 主线程、异步、延时、once |
-| Codable | 字典/Model 互转 |
-| UserDefaults | Codable 存储 |
-| 防抖与节流 | Debouncer / Throttler |
-| 自定义控件 | MLButton、MLTextField、MLDottedLine |
-| 网络请求 | 配置说明、响应解析 |
-| 工具方法 | JSON、打电话 |
+运行 `MLBaseTool_Example`，首页列出各模块演示入口，包括：基础配置、Toast、字符串与富文本、日期、UIView、GCD、Codable、UserDefaults、Keychain、文件缓存、权限、键盘、空状态、Alert 弹窗、渐变控件、网络等。
 
 ---
 
 ## 注意事项
 
-1. **敏感词文件**：在宿主 App 的 main bundle 中添加 `sensitiveWord.txt`，词语以英文逗号 `,` 分隔，然后调用 `ToolManager.reloadSensitiveWords()`。
-2. **网络模块**：`post` 默认使用 JSON Body，`get` 使用 URL Query；成功码默认为 `0`，请与后端约定一致。
-3. **Toast 依赖**：基于 [Toast-Swift](https://github.com/scalessec/Toast-Swift)，需确保 App 有可见的 keyWindow。
-4. **全面屏适配**：优先使用 `safeAreaTop` / `safeAreaBottom`，不要硬编码状态栏高度。
-5. **仅 Core 安装**：不需要网络功能时使用 `:subspecs => ['Core']`，可避免引入 Alamofire。
+1. **敏感词**：在宿主 App 的 main bundle 放置 `sensitiveWord.txt`（英文逗号分隔），调用 `ToolManager.reloadSensitiveWords()`。
+2. **网络模块**：`post` 使用 JSON Body，`get` 使用 URL Query；成功码默认 `0`，需与后端一致。
+3. **Toast**：依赖 [Toast-Swift](https://github.com/scalessec/Toast-Swift)，需有可见 keyWindow。
+4. **全面屏**：使用 `safeAreaTop` / `safeAreaBottom`，勿硬编码状态栏高度。
+5. **弹窗富文本链式写法**：先 `make.font().foregroundColor()` 设置属性，最后调用 `allRange()` 或 `inRange()` 应用。
 
 ---
 
 ## 更新日志
 
+### 0.3.0
+
+- 库重命名为 **MLBaseTool**（原 GFBaseTool）
+- API 前缀统一为 `ml_`，类名统一为 `ML` 前缀
+- 新增 Alert 弹窗体系、富文本、渐变组件、空状态、键盘处理
+- 新增 Storage（Keychain、文件）、Permission 子模块
+- 补全 Example 演示与文档
+
 ### 0.2.0
 
-- 全面 `public` 化，修复 Pod 集成可用性
-- 安全区改为动态计算
-- 网络层支持可配置成功码、Loading 开关
-- 新增 UIColor/Device/UserDefaults/Debouncer 等工具
+- 全面 public 化，网络层可配置
 - 拆分 Core / Network subspec
-- 补全注释、中文文档与 Example 示例
+- 新增 Device、UserDefaults、Debouncer 等
 
 ### 0.1.x
 
-- 初始版本
+- 初始版本（以 GFBaseTool 发布）
 
 ---
 
 ## 作者与许可
 
-**作者**：guofeifeng (mapleleaf99@126.com)
+**作者**：[叫我锅先生](https://github.com/mapleleaf99) / mapleleaf99
+
+**邮箱**：mapleleaf99@126.com
 
 **仓库**：https://github.com/mapleleaf99/MLBaseTool
 

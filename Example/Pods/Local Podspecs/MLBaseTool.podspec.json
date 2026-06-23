@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "summary": "MLBaseTool 是一个 iOS 基础工具库",
   "description": "MLBaseTool 提供常用 Extension、GCD 封装、Toast、网络请求、存储、权限、UI 组件等基础能力，\n适用于快速搭建 iOS 项目的基础设施层。",
-  "homepage": "https://github.com/mapleleaf99/GFBaseTool",
+  "homepage": "https://github.com/mapleleaf99/MLBaseTool",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,7 +12,7 @@
     "叫我锅先生": "mapleleaf99@126.com"
   },
   "source": {
-    "git": "https://github.com/mapleleaf99/GFBaseTool.git",
+    "git": "https://github.com/mapleleaf99/MLBaseTool.git",
     "tag": "0.3.0"
   },
   "platforms": {

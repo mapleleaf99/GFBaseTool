@@ -1,16 +1,32 @@
 PODS:
-  - GFBaseTool (0.1.4)
+  - Alamofire (5.6.4)
+  - GFBaseTool (0.2.0):
+    - GFBaseTool/Core (= 0.2.0)
+    - GFBaseTool/Network (= 0.2.0)
+  - GFBaseTool/Core (0.2.0):
+    - Toast-Swift (= 5.0.1)
+  - GFBaseTool/Network (0.2.0):
+    - Alamofire (~> 5.6.1)
+    - GFBaseTool/Core
+  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - GFBaseTool (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - Toast-Swift
 
 EXTERNAL SOURCES:
   GFBaseTool:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GFBaseTool: 2ad6bfe1f4018471732375a0867c7ce3596da9e2
+  Alamofire: 4e95d97098eacb88856099c4fc79b526a299e48c
+  GFBaseTool: 17ae4873ffd311b71eb77490073789c65cf54135
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: acf2bb9c4df209ec9c2a650b22262051bca581a5
+PODFILE CHECKSUM: a2f547aca9f2481bbb370fc6b214530f26b6acdb
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.16.2

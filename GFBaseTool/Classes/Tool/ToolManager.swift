@@ -1,122 +1,118 @@
 //
 //  ToolManager.swift
-//  LvboLive
+//  GFBaseTool
 //
-//  Created by 叫我锅先生 on 2021/4/18.
-//  Copyright © 2021 叫我锅先生. All rights reserved.
+//  通用业务工具：拨打电话、JSON 转换、敏感词过滤、正则校验。
 //
 
 import UIKit
 
-class ToolManager: NSObject {
+/// 通用工具管理类
+public class ToolManager: NSObject {
 
-    //MARK:打电话
-    ///打电话
-    static func callPhone(titleStr: String, phoneNumStr: String?, viewCtrl: UIViewController?) {
-        if phoneNumStr == nil || phoneNumStr?.count == 0 || viewCtrl == nil {
+    // MARK: - 打电话
+
+    /// 弹出确认框后拨打电话
+    /// - Parameters:
+    ///   - titleStr: 弹窗标题
+    ///   - phoneNumStr: 电话号码，会自动去除空格
+    ///   - viewCtrl: 用于 present 弹窗的控制器
+    public static func callPhone(titleStr: String, phoneNumStr: String?, viewCtrl: UIViewController?) {
+        guard let phoneNumStr = phoneNumStr?.replacingOccurrences(of: " ", with: ""),
+              !phoneNumStr.isEmpty,
+              let viewCtrl = viewCtrl,
+              let url = URL(string: "tel://" + phoneNumStr) else {
             return
         }
-        
-        let alertController: UIAlertController = UIAlertController(title: titleStr, message: nil, preferredStyle: UIAlertController.Style.alert)
-        let cancel: UIAlertAction = UIAlertAction(title: "取消", style: UIAlertAction.Style.cancel, handler: { (_) in
+
+        let alertController = UIAlertController(title: titleStr, message: nil, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "取消", style: .cancel))
+        alertController.addAction(UIAlertAction(title: "确定", style: .destructive) { _ in
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         })
-        let confirm: UIAlertAction = UIAlertAction(title: "确定" , style: .destructive, handler: { (_) in
-            let phoneStr =  phoneNumStr?.replacingOccurrences(of: " ", with: "")
-            UIApplication.shared.openURL(NSURL(string : "tel://" + phoneStr!)! as URL)
-        })
-        alertController.addAction(cancel)
-        alertController.addAction(confirm)
-        alertController.popoverPresentationController?.sourceView = viewCtrl?.view
-        alertController.popoverPresentationController?.sourceRect = CGRect(x: 0, y: ScreenHeight, width: ScreenWidth, height: ScreenHeight)
-        viewCtrl?.present(alertController, animated: true, completion: nil)
-    }
-    
-    ///json字符串转字典
-    static func getDicFromJSONString(jsonString: String) -> [String: Any]? {
-        if let jsonData = jsonString.data(using: .utf8),
-            let obj = try? JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.mutableContainers),
-            let dic = obj as? [String: Any]{
-            return dic
-        }
-        
-        return nil
-    }
-    
-    ///字典转json字符串
-    static func getJSONStringFromDic(dic: [String: Any]) -> String {
-        if let data = try? JSONSerialization.data(withJSONObject: dic, options: []) {
-            let jsonString = String(data: data, encoding: .utf8)
-            return jsonString ?? ""
-        }
-        return ""
+        alertController.popoverPresentationController?.sourceView = viewCtrl.view
+        alertController.popoverPresentationController?.sourceRect = CGRect(
+            x: 0, y: ScreenHeight, width: ScreenWidth, height: ScreenHeight
+        )
+        viewCtrl.present(alertController, animated: true)
     }
 
-    //MARK:判断敏感字
-    ///加@objc是为了在oc上可以调用该方法-用于私信的敏感词判断
-    @objc static func checkSensitiveWords(wordStr: String) -> Bool {
-     
-        if wordStr.count == 0 {
-            return true
-        }
+    // MARK: - JSON
 
-        if sensitiveWords.isEmpty {
-            return true
+    /// JSON 字符串转字典
+    public static func getDicFromJSONString(jsonString: String) -> [String: Any]? {
+        guard let jsonData = jsonString.data(using: .utf8),
+              let obj = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers),
+              let dic = obj as? [String: Any] else {
+            return nil
         }
-        
-        for sensitiveStr in sensitiveWords
-        {
-            if wordStr.components(separatedBy: sensitiveStr).count > 1 {
-                //弹窗
-//                MBProgressHUD.showError("内容不得包含敏感字：" + sensitiveStr, to: nil)
+        return dic
+    }
+
+    /// 字典转 JSON 字符串
+    public static func getJSONStringFromDic(dic: [String: Any], prettyPrinted: Bool = false) -> String {
+        let options: JSONSerialization.WritingOptions = prettyPrinted ? .prettyPrinted : []
+        guard let data = try? JSONSerialization.data(withJSONObject: dic, options: options) else {
+            return ""
+        }
+        return String(data: data, encoding: .utf8) ?? ""
+    }
+
+    // MARK: - 敏感词
+
+    /// 检查文本是否通过敏感词校验
+    /// - Returns: true 表示不含敏感词，false 表示包含敏感词
+    @objc public static func checkSensitiveWords(wordStr: String) -> Bool {
+        if wordStr.isEmpty || sensitiveWords.isEmpty { return true }
+        for sensitiveStr in sensitiveWords where !sensitiveStr.isEmpty {
+            if wordStr.contains(sensitiveStr) {
                 return false
             }
         }
-        
         return true
     }
-    
-    ///检查敏感词替换成*
-    @objc static func checkSensitiveWordsReplacedWithAsterisk(wordStr: String) -> String {
-     
-        if wordStr.count == 0 {
-            return wordStr
-        }
 
-        if sensitiveWords.isEmpty {
-            return wordStr
-        }
-        
-        for sensitiveStr in sensitiveWords
-        {
-            if wordStr.components(separatedBy: sensitiveStr).count > 1 {
-//                var asteriskStr: String = ""
-//                for i in 0..<sensitiveStr.count {
-//                    asteriskStr.append("*")
-//                }
+    /// 若包含敏感词则替换为 **，否则返回原文
+    @objc public static func checkSensitiveWordsReplacedWithAsterisk(wordStr: String) -> String {
+        if wordStr.isEmpty || sensitiveWords.isEmpty { return wordStr }
+        for sensitiveStr in sensitiveWords where !sensitiveStr.isEmpty {
+            if wordStr.contains(sensitiveStr) {
                 return "**"
             }
         }
-        
         return wordStr
     }
 
-    ///获取敏感词库
-    static var sensitiveWords: [String] = {
-        var sensitiveWords: [String] = []
-        if let path = Bundle.main.path(forResource: "sensitiveWord.txt", ofType: nil),
-            let string = try? String(contentsOfFile: path, encoding: .utf8) {
-            let list = string.components(separatedBy: ",")
-            
-            sensitiveWords = list
-            sensitiveWords.removeLast()
+    /// 重新加载敏感词库
+    /// 优先读取宿主 App 的 main bundle，其次读取 Pod bundle
+    /// 词库文件名为 sensitiveWord.txt，词语以英文逗号分隔
+    public static func reloadSensitiveWords() {
+        sensitiveWords = loadSensitiveWords()
+    }
+
+    /// 当前敏感词列表
+    public static var sensitiveWords: [String] = loadSensitiveWords()
+
+    private static func loadSensitiveWords() -> [String] {
+        let paths = [
+            Bundle.main.path(forResource: "sensitiveWord", ofType: "txt"),
+            Bundle(for: ToolManager.self).path(forResource: "sensitiveWord", ofType: "txt")
+        ]
+        for path in paths.compactMap({ $0 }) {
+            if let string = try? String(contentsOfFile: path, encoding: .utf8) {
+                return string
+                    .components(separatedBy: ",")
+                    .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    .filter { !$0.isEmpty }
+            }
         }
-        
-        return sensitiveWords
-    }()
-    
-    ///正则判断
-    static func isValid(_ checkStr: String, regex: String) -> Bool{
-        let predicte = NSPredicate(format: "SELF MATCHES %@", regex)
-        return predicte.evaluate(with: checkStr)
+        return []
+    }
+
+    // MARK: - 正则
+
+    /// 正则校验
+    public static func isValid(_ checkStr: String, regex: String) -> Bool {
+        return checkStr.isValid(regex: regex)
     }
 }

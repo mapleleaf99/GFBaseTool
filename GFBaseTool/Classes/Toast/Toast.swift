@@ -1,28 +1,36 @@
 //
 //  Toast.swift
-//  SECXSwift
+//  GFBaseTool
 //
-//  Created by 郭飞锋 on 2022/5/7.
+//  Toast 提示封装，基于 Toast-Swift，自动获取当前 window 显示。
 //
 
 import UIKit
 import Toast_Swift
 
-class Toast: NSObject {
-    static func show(_ message: String?, postion: ToastPosition = .center) {
-        UIApplication.currentwindow()?.makeToast(message, position: postion)
+/// Toast 提示工具
+public class Toast: NSObject {
+
+    /// 显示文字提示
+    /// - Parameters:
+    ///   - message: 提示内容
+    ///   - position: 显示位置，默认居中
+    public static func show(_ message: String?, position: ToastPosition = .center) {
+        UIApplication.currentWindow()?.makeToast(message, position: position)
     }
-    
-    static func hidden() {
-        UIApplication.currentwindow()?.hideToast()
+
+    /// 隐藏文字提示
+    public static func hidden() {
+        UIApplication.currentWindow()?.hideToast()
     }
-    
-    static func showProgress(_ postion: ToastPosition = .center) {
-        UIApplication.currentwindow()?.makeToastActivity(postion)
+
+    /// 显示 Loading 菊花
+    public static func showProgress(_ position: ToastPosition = .center) {
+        UIApplication.currentWindow()?.makeToastActivity(position)
     }
-   
-    static func hiddenProgress() {
-        UIApplication.currentwindow()?.hideToastActivity()
+
+    /// 隐藏 Loading 菊花
+    public static func hiddenProgress() {
+        UIApplication.currentWindow()?.hideToastActivity()
     }
 }
-

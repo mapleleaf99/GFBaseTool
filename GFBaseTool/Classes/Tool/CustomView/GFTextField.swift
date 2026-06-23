@@ -1,145 +1,138 @@
 //
 //  GFTextField.swift
-//  LvboLive
+//  GFBaseTool
 //
-//  Created by 叫我锅先生 on 2017/11/17.
-//  Copyright © 2017年 叫我锅先生. All rights reserved.
+//  自定义输入框：占位符颜色、左边距、字数限制、Block 回调。
 //
 
 import UIKit
 
+/// 增强型 UITextField
 public class GFTextField: UITextField {
-    
-    override init(frame: CGRect){
+
+    public override init(frame: CGRect) {
         super.init(frame: frame)
         delegate = self
     }
-    
+
     public override var placeholder: String? {
-        didSet{
-            self.attributedPlaceholder = NSAttributedString(string: placeholder ?? " ", attributes: [.foregroundColor:placeholderColor ?? .black])
+        didSet {
+            updatePlaceholder()
         }
     }
-    
+
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         delegate = self
-        self.setValue(self.placeholderColor, forKey: "placeholderColor")
-        self.setValue(self.leftMargin, forKey: "leftMargin")
+        _ = gf_leftView
+        updatePlaceholder()
     }
-    
+
     public override func setValue(_ value: Any?, forUndefinedKey key: String) {
-        if key == "placeholderColor"{
-            self.placeholderColor = value as? UIColor
+        if key == "placeholderColor" {
+            placeholderColor = value as? UIColor
         }
-        
-        if key == "leftMargin" {
-            self.leftMargin = value as! CGFloat
+        if key == "leftMargin", let margin = value as? CGFloat {
+            leftMargin = margin
         }
     }
-    
+
     public override func deleteBackward() {
         super.deleteBackward()
         deleteKeyPressBlock?(self)
     }
-    
-    public func deleteKeyPress(_ block : ((_ textfield : GFTextField)->Void)?) {
+
+    public func deleteKeyPress(_ block: ((_ textfield: GFTextField) -> Void)?) {
         deleteKeyPressBlock = block
     }
-    
-    public func pressReturn(_ block : ((_ textfield : GFTextField)->Void)?){
+
+    public func pressReturn(_ block: ((_ textfield: GFTextField) -> Void)?) {
         returnBlock = block
     }
-    public func beginEditing(_ block : ((_ textfield : GFTextField)->Void)?){
+
+    public func beginEditing(_ block: ((_ textfield: GFTextField) -> Void)?) {
         beginBlock = block
     }
-    public func endEditing(_ block : ((_ textfield : GFTextField)->Void)?){
+
+    public func endEditing(_ block: ((_ textfield: GFTextField) -> Void)?) {
         endBlock = block
     }
-    public func textChange(_ block : ((_ textfield : GFTextField)->Void)?){
+
+    public func textChange(_ block: ((_ textfield: GFTextField) -> Void)?) {
         addTarget(self, action: #selector(textValueChange(_:)), for: .editingChanged)
         changeBlock = block
     }
-    
-    @objc private func textValueChange(_ textfield : GFTextField) {
+
+    @objc private func textValueChange(_ textfield: GFTextField) {
         changeBlock?(textfield)
     }
-    
-    // MARK: 属性
+
+    /// 最大输入字数，-1 表示不限制
     public var maxCount: Int = -1
-    public var placeholderColor: UIColor? = UIColor.black
-    {
-        didSet{
-            self.attributedPlaceholder = NSAttributedString(string: self.placeholder ?? " ", attributes: [.foregroundColor:placeholderColor ?? .black])
-        }
+
+    /// 占位符颜色
+    public var placeholderColor: UIColor? = .black {
+        didSet { updatePlaceholder() }
     }
-    public var leftMargin : CGFloat = 10 {
-        didSet{
-            self.GF_leftView.frame.size.width = leftMargin
-        }
+
+    /// 左侧内边距
+    public var leftMargin: CGFloat = 10 {
+        didSet { gf_leftView.frame.size.width = leftMargin }
     }
-    
-    private lazy var GF_leftView: UIView = {
-         let view = UIView(frame: self.bounds)
-        view.frame.size.width = self.leftMargin
-        self.leftView = view
-        self.leftViewMode = .always
+
+    private func updatePlaceholder() {
+        attributedPlaceholder = NSAttributedString(
+            string: placeholder ?? " ",
+            attributes: [.foregroundColor: placeholderColor ?? .black]
+        )
+    }
+
+    private lazy var gf_leftView: UIView = {
+        let view = UIView(frame: bounds)
+        view.frame.size.width = leftMargin
+        leftView = view
+        leftViewMode = .always
         return view
     }()
-    private lazy var deleteKeyPressBlock : ((_ textfield : GFTextField)->Void)? = nil
-    private lazy var returnBlock : ((_ textfield : GFTextField)->Void)? = nil
-    private lazy var beginBlock : ((_ textfield : GFTextField)->Void)? = nil
-    private lazy var endBlock : ((_ textfield : GFTextField)->Void)? = nil
-    private lazy var changeBlock : ((_ textfield : GFTextField)->Void)? = nil
+
+    private var deleteKeyPressBlock: ((_ textfield: GFTextField) -> Void)?
+    private var returnBlock: ((_ textfield: GFTextField) -> Void)?
+    private var beginBlock: ((_ textfield: GFTextField) -> Void)?
+    private var endBlock: ((_ textfield: GFTextField) -> Void)?
+    private var changeBlock: ((_ textfield: GFTextField) -> Void)?
 }
 
 public extension GFTextField {
-    convenience init(textColor : UIColor, placeholderColor: UIColor, palceholder str: String?, leftMargin : CGFloat = 15) {
-        self.init(frame: CGRect.zero)
+    convenience init(textColor: UIColor, placeholderColor: UIColor, palceholder str: String?, leftMargin: CGFloat = 15) {
+        self.init(frame: .zero)
         self.textColor = textColor
+        self.placeholderColor = placeholderColor
         self.placeholder = str
-        self.setValue(placeholderColor, forKey: "placeholderColor")
-        self.setValue(leftMargin, forKey: "leftMargin")
+        self.leftMargin = leftMargin
     }
 }
 
-extension GFTextField : UITextFieldDelegate {
+extension GFTextField: UITextFieldDelegate {
+
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         returnBlock?(textField as! GFTextField)
         textField.resignFirstResponder()
         return true
     }
-    
+
     public func textFieldDidBeginEditing(_ textField: UITextField) {
         beginBlock?(textField as! GFTextField)
     }
-    
+
     public func textFieldDidEndEditing(_ textField: UITextField) {
         endBlock?(textField as! GFTextField)
     }
-    
-    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool{
-        if maxCount == -1 {
-            return true
-        }
-        
-        if range.location < maxCount {
-            return true
-        }
-        
-        return false
-        
-    }
-    
-    public func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        return true
-    }
-    
-    public func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        return true
-    }
-    
-    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        return true
+
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        guard maxCount > 0 else { return true }
+        let current = textField.text ?? ""
+        guard let textRange = Range(range, in: current) else { return false }
+        let updated = current.replacingCharacters(in: textRange, with: string)
+        return updated.count <= maxCount
     }
 }

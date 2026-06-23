@@ -1,60 +1,65 @@
 //
 //  GFDottedLine.swift
-//  Yoga
+//  GFBaseTool
 //
-//  Created by 叫我锅先生 on 2019/5/8.
-//  Copyright © 2019 叫我锅先生. All rights reserved.
+//  水平虚线视图，支持自定义颜色、线宽、虚线样式。
 //
 
 import UIKit
 
-//虚线
-class GFDottedLine: UIView {
+/// 水平虚线
+public class GFDottedLine: UIView {
 
-    //MARK: - System Method
-    private override init(frame: CGRect) {
+    /// 线条颜色
+    public var strokeColor: UIColor = kRGBColorFromHex(rgbValue: 0xeeeeee) {
+        didSet { shapeLayer.strokeColor = strokeColor.cgColor }
+    }
+
+    /// 线宽
+    public var lineWidth: CGFloat = 1 {
+        didSet { shapeLayer.lineWidth = lineWidth }
+    }
+
+    /// 虚线样式，如 [4, 2] 表示 4pt 实线 + 2pt 空白
+    public var dashPattern: [NSNumber] = [4, 2] {
+        didSet { shapeLayer.lineDashPattern = dashPattern }
+    }
+
+    private let shapeLayer = CAShapeLayer()
+
+    public override init(frame: CGRect) {
         super.init(frame: frame)
+        setup()
     }
-    
-    convenience init(frame: CGRect, strokeColor: UIColor) {
-        self.init(frame: frame)
-        
-        self.strokeColor = strokeColor
-        
-        setUp()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    //MARK: - Private Property
-    private var strokeColor: UIColor = kRGBColorFromHex(rgbValue: 0xeeeeee)
-}
 
-//MARK: - Private Method
-extension GFDottedLine {
-    private func setUp() {
-        let shapeLayer = CAShapeLayer()
-        
-        shapeLayer.bounds = self.bounds
-        
-        shapeLayer.position = CGPoint(x: self.width / 2, y: self.height / 2)
-        
+    public convenience init(frame: CGRect, strokeColor: UIColor) {
+        self.init(frame: frame)
+        self.strokeColor = strokeColor
+        shapeLayer.strokeColor = strokeColor.cgColor
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        shapeLayer.frame = bounds
+        let path = CGMutablePath()
+        let y = bounds.height / 2
+        path.move(to: CGPoint(x: 0, y: y))
+        path.addLine(to: CGPoint(x: bounds.width, y: y))
+        shapeLayer.path = path
+    }
+
+    private func setup() {
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.strokeColor = strokeColor.cgColor
-        
-        shapeLayer.lineWidth = 1
-        shapeLayer.lineJoin = CAShapeLayerLineJoin.round
+        shapeLayer.lineWidth = lineWidth
+        shapeLayer.lineJoin = .round
         shapeLayer.lineDashPhase = 0
-        shapeLayer.lineDashPattern = [NSNumber(value: 4), NSNumber(value: 2)]//线的宽度和间距
-    
-        let path = CGMutablePath()
-        path.move(to: CGPoint(x: 0, y: 5))
-        path.addLine(to: CGPoint(x: self.width, y: 5))
-        shapeLayer.path = path
-        
-        self.layer.addSublayer(shapeLayer)
+        shapeLayer.lineDashPattern = dashPattern
+        layer.addSublayer(shapeLayer)
     }
-
 }

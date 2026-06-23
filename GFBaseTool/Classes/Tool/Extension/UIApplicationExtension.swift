@@ -1,29 +1,33 @@
 //
 //  UIApplicationExtension.swift
-//  SECXSwift
+//  GFBaseTool
 //
-//  Created by 郭飞锋 on 2022/5/7.
+//  UIApplication 扩展：获取当前 keyWindow。
 //
 
 import UIKit
 
-extension UIApplication {
-    ///获取当前window
-   static func currentwindow() -> UIWindow? {
-       
-       if #available(iOS 14.0, *) {
-           if let window = UIApplication.shared.connectedScenes.map({ $0 as? UIWindowScene}).compactMap({ $0 }).first?.windows.first {
-               return window
-           }
-       } else if #available(iOS 13.0, *) {
-           if let window = UIApplication.shared.connectedScenes.filter({ $0.activationState == .foregroundActive }).map({ $0 as? UIWindowScene}).compactMap({ $0 }).first?.windows.filter({ $0.isKeyWindow }).first {
-               return window
-           }
-       }
-       
-       if let window = UIApplication.shared.delegate?.window {
-           return window
-       }
-       return nil
+public extension UIApplication {
+
+    /// 获取当前 key window，兼容 iOS 13+ 多 Scene
+    static func currentWindow() -> UIWindow? {
+        if #available(iOS 15.0, *) {
+            return shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }
+        } else if #available(iOS 13.0, *) {
+            return shared.connectedScenes
+                .filter { $0.activationState == .foregroundActive }
+                .compactMap { $0 as? UIWindowScene }
+                .first?.windows
+                .first { $0.isKeyWindow }
+        }
+        return shared.delegate?.window ?? nil
+    }
+
+    @available(*, deprecated, renamed: "currentWindow()")
+    static func currentwindow() -> UIWindow? {
+        return currentWindow()
     }
 }

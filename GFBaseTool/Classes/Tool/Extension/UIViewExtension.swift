@@ -1,219 +1,192 @@
 //
 //  UIViewExtension.swift
-//  LvboLive
+//  GFBaseTool
 //
-//  Created by 叫我锅先生 on 2021/4/15.
-//  Copyright © 2021 叫我锅先生. All rights reserved.
+//  UIView 扩展：frame 快捷属性、圆角边框、渐变、抖动动画等。
 //
 
-import Foundation
 import UIKit
 
-extension UIView {
-    // MARK: - 常用位置属性
-    public var x:CGFloat {
-        get {
-            return self.frame.origin.x
-        }
-        set(newX) {
-            var frame = self.frame
-            frame.origin.x = newX
-            self.frame = frame
-        }
+public extension UIView {
+
+    // MARK: - Frame 快捷属性
+
+    var x: CGFloat {
+        get { frame.origin.x }
+        set { frame.origin.x = newValue }
     }
-    
-    public var y:CGFloat {
-        get {
-            return self.frame.origin.y
-        }
-        
-        set(newY) {
-            var frame = self.frame
-            frame.origin.y = newY
-            self.frame = frame
-        }
+
+    var y: CGFloat {
+        get { frame.origin.y }
+        set { frame.origin.y = newValue }
     }
-    
-    public var width:CGFloat {
-        get {
-            return self.frame.size.width
-        }
-        
-        set(newWidth) {
-            var frame = self.frame
-            frame.size.width = newWidth
-            self.frame = frame
-        }
+
+    var width: CGFloat {
+        get { frame.size.width }
+        set { frame.size.width = newValue }
     }
-    
-    public var height:CGFloat {
-        get {
-            return self.frame.size.height
-        }
-        
-        set(newHeight) {
-            var frame = self.frame
-            frame.size.height = newHeight
-            self.frame = frame
-        }
+
+    var height: CGFloat {
+        get { frame.size.height }
+        set { frame.size.height = newValue }
     }
-    
-    public var centerX:CGFloat {
-        get {
-            return self.center.x
-        }
-        
-        set(newCenterX) {
-            var center = self.center
-            center.x = newCenterX
-            self.center = center
-        }
+
+    var centerX: CGFloat {
+        get { center.x }
+        set { center.x = newValue }
     }
-    
-    public var centerY:CGFloat {
-        get {
-            return self.center.y
-        }
-        
-        set(newCenterY) {
-            var center = self.center
-            center.y = newCenterY
-            self.center = center
-        }
+
+    var centerY: CGFloat {
+        get { center.y }
+        set { center.y = newValue }
     }
-    
+
+    // MARK: - IBInspectable
+
+    /// 圆角半径，设置后自动开启 masksToBounds
     @IBInspectable var cornerRadius: CGFloat {
-        get {
-            return layer.cornerRadius
-        }
+        get { layer.cornerRadius }
         set {
             layer.cornerRadius = newValue
             layer.masksToBounds = newValue > 0
         }
     }
-    
+
+    /// 边框宽度
     @IBInspectable var borderWidth: CGFloat {
-        get {
-            return layer.borderWidth
-        }
-        set {
-            layer.borderWidth = newValue
-        }
+        get { layer.borderWidth }
+        set { layer.borderWidth = newValue }
     }
-    
+
+    /// 边框颜色，未设置时返回 .clear
     @IBInspectable var borderColor: UIColor {
         get {
-            return UIColor(cgColor: layer.borderColor!)
+            guard let cgColor = layer.borderColor else { return .clear }
+            return UIColor(cgColor: cgColor)
         }
-        set {
-            layer.borderColor = newValue.cgColor
-        }
+        set { layer.borderColor = newValue.cgColor }
     }
-    
-    // MARK: - 常用方法
-    
-    /// 设置上下两个圆角
-    /// - Parameters:
-    ///   - corner: 圆角
-    ///   - roundingCorners: 哪个位置的圆角
-    func setMutiBorderRoundingCorners(_ corner: CGFloat, roundingCorners: UIRectCorner = [UIRectCorner.topLeft, UIRectCorner.topRight]) {
 
-        let maskPath = UIBezierPath(roundedRect: bounds, byRoundingCorners: roundingCorners, cornerRadii: CGSize(width: corner, height: corner))
+    // MARK: - 圆角与渐变
+
+    /// 设置指定角的圆角
+    func setMutiBorderRoundingCorners(_ corner: CGFloat, roundingCorners: UIRectCorner = [.topLeft, .topRight]) {
+        let maskPath = UIBezierPath(
+            roundedRect: bounds,
+            byRoundingCorners: roundingCorners,
+            cornerRadii: CGSize(width: corner, height: corner)
+        )
         let maskLayer = CAShapeLayer()
         maskLayer.frame = bounds
         maskLayer.path = maskPath.cgPath
         layer.mask = maskLayer
     }
-    
-    /// 添加渐变颜色
-    ///
-    /// - Parameters:
-    ///   - colors: 【颜色】
-    ///   - locations: 【位置】
-    ///   - startPoint: 起点
-    ///   - endPoint: 终点
-    ///   - cornerRadius: 圆角
-    func addGradientLaye(colors: [UIColor], locations: [NSNumber]? = nil, startPoint: CGPoint? = nil, endPoint: CGPoint? = nil, cornerRadius: CGFloat = 0){
-        
+
+    private static var gradientLayerKey: UInt8 = 0
+
+    /// 添加渐变背景层（layout 变化后需调用 updateGradientLayerFrame）
+    func addGradientLayer(
+        colors: [UIColor],
+        locations: [NSNumber]? = nil,
+        startPoint: CGPoint = CGPoint(x: 0, y: 0.5),
+        endPoint: CGPoint = CGPoint(x: 1, y: 0.5),
+        cornerRadius: CGFloat = 0
+    ) {
+        removeGradientLayer()
         let gradientLayer = CAGradientLayer()
-        gradientLayer.colors = colors
+        gradientLayer.colors = colors.map { $0.cgColor }
         gradientLayer.locations = locations ?? [0.0, 1.0]
+        gradientLayer.startPoint = startPoint
+        gradientLayer.endPoint = endPoint
         gradientLayer.cornerRadius = cornerRadius
-        //设置其CAGradientLayer对象的frame，并插入view的layer
-        gradientLayer.frame = frame
+        gradientLayer.frame = bounds
         layer.insertSublayer(gradientLayer, at: 0)
+        objc_setAssociatedObject(self, &UIView.gradientLayerKey, gradientLayer, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
     }
-    
-    ///移除所有的子类
-    func removeAllSubViews() {
-        for view: UIView in subviews {
-            view.removeFromSuperview()
+
+    @available(*, deprecated, renamed: "addGradientLayer(colors:locations:startPoint:endPoint:cornerRadius:)")
+    func addGradientLaye(
+        colors: [UIColor],
+        locations: [NSNumber]? = nil,
+        startPoint: CGPoint? = nil,
+        endPoint: CGPoint? = nil,
+        cornerRadius: CGFloat = 0
+    ) {
+        addGradientLayer(
+            colors: colors,
+            locations: locations,
+            startPoint: startPoint ?? CGPoint(x: 0, y: 0.5),
+            endPoint: endPoint ?? CGPoint(x: 1, y: 0.5),
+            cornerRadius: cornerRadius
+        )
+    }
+
+    /// 移除渐变层
+    func removeGradientLayer() {
+        if let gradientLayer = objc_getAssociatedObject(self, &UIView.gradientLayerKey) as? CAGradientLayer {
+            gradientLayer.removeFromSuperlayer()
+            objc_setAssociatedObject(self, &UIView.gradientLayerKey, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
-    
-    ///查找vc
-    func viewController() ->UIViewController? {
-        
+
+    /// 在 layoutSubviews 中调用以同步渐变层尺寸
+    func updateGradientLayerFrame() {
+        if let gradientLayer = objc_getAssociatedObject(self, &UIView.gradientLayerKey) as? CAGradientLayer {
+            gradientLayer.frame = bounds
+        }
+    }
+
+    // MARK: - 工具方法
+
+    /// 移除所有子视图
+    func removeAllSubViews() {
+        subviews.forEach { $0.removeFromSuperview() }
+    }
+
+    /// 查找当前视图所在的 ViewController
+    func viewController() -> UIViewController? {
         var nextResponder: UIResponder? = self
-        
-        repeat {
-            nextResponder = nextResponder?.next
-            if let viewController = nextResponder as? UIViewController {
+        while let responder = nextResponder {
+            if let viewController = responder as? UIViewController {
                 return viewController
             }
-        } while nextResponder != nil
-        
+            nextResponder = responder.next
+        }
         return nil
     }
 }
 
 /// 抖动方向
-///
-/// - horizontal: 水平抖动
-/// - vertical:   垂直抖动
 public enum GFShakeDirection: Int {
     case horizontal
     case vertical
 }
 
-//抖动view
-extension UIView {
-    /// GFF 扩展UIView增加抖动方法
-    ///
-    /// - Parameters:
-    ///   - direction:  抖动方向    默认水平方向
-    ///   - times:      抖动次数    默认5次
-    ///   - interval:   每次抖动时间 默认0.1秒
-    ///   - offset:     抖动的偏移量 默认2个点
-    ///   - completion: 抖动结束回调
-    public func shake(direction: GFShakeDirection = .horizontal, times: Int = 5, interval: TimeInterval = 0.1, offset: CGFloat = 2, completion: (() -> Void)? = nil) {
-        
-        //移动视图动画（一次）
+public extension UIView {
+
+    /// 抖动动画，常用于表单校验失败提示
+    func shake(
+        direction: GFShakeDirection = .horizontal,
+        times: Int = 5,
+        interval: TimeInterval = 0.1,
+        offset: CGFloat = 2,
+        completion: (() -> Void)? = nil
+    ) {
         UIView.animate(withDuration: interval, animations: {
             switch direction {
-                case .horizontal:
-                    self.layer.setAffineTransform(CGAffineTransform(translationX: offset, y: 0))
-                case .vertical:
-                    self.layer.setAffineTransform(CGAffineTransform(translationX: 0, y: offset))
+            case .horizontal:
+                self.layer.setAffineTransform(CGAffineTransform(translationX: offset, y: 0))
+            case .vertical:
+                self.layer.setAffineTransform(CGAffineTransform(translationX: 0, y: offset))
             }
-            
-        }) { (complete) in
-            //如果当前是最后一次抖动，则将位置还原，并调用完成回调函数
-            if (times == 0) {
+        }) { _ in
+            if times == 0 {
                 UIView.animate(withDuration: interval, animations: {
-                    self.layer.setAffineTransform(CGAffineTransform.identity)
-                }, completion: { (complete) in
-                    completion?()
-                })
-            }
-            
-            //如果当前不是最后一次，则继续动画，偏移位置相反
-            else {
+                    self.layer.setAffineTransform(.identity)
+                }, completion: { _ in completion?() })
+            } else {
                 self.shake(direction: direction, times: times - 1, interval: interval, offset: -offset, completion: completion)
             }
         }
     }
-
-    
 }
-

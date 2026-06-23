@@ -1,85 +1,144 @@
 //
 //  NetWork.swift
-//  SwiftDemo
+//  GFBaseTool
 //
-//  Created by 叫我锅先生 on 2021/8/3.
-//  Copyright © 2021 叫我锅先生. All rights reserved.
+//  基于 Alamofire 的网络请求封装，自动解析 BaseResponse 并回调 Model。
 //
 
 import Foundation
 import Alamofire
-import UIKit
 
-class NetWork: NSObject {
-    
-    public static let share  = NetWork()
-    
-    ///isDataList: data返回值是数组
-    private func baseRequestWithModel<T: Codable>(url: String, method: HTTPMethod, parameters: [String: Any]?, token: String?, type: T.Type, success:((T) -> Void)?, failure: ((Error?) -> Void)?) {
-        let urlStr = baseUrl + url
-        
-        var headers: HTTPHeaders?
-        
+/// 网络请求管理类（单例）
+public class NetWork: NSObject {
+
+    /// 单例
+    public static let share = NetWork()
+
+    /// 全局网络配置
+    public var configuration: GFNetworkConfiguration {
+        get { GFNetworkConfiguration.shared }
+        set { GFNetworkConfiguration.shared = newValue }
+    }
+
+    private func baseRequestWithModel<T: Codable>(
+        url: String,
+        method: HTTPMethod,
+        parameters: [String: Any]?,
+        encoding: ParameterEncoding,
+        token: String?,
+        type: T.Type,
+        showLoading: Bool?,
+        success: ((T) -> Void)?,
+        failure: ((Error) -> Void)?
+    ) {
+        let config = configuration
+        let urlStr = config.baseURL + url
+        let shouldShowLoading = showLoading ?? config.showLoading
+
+        var extraHeaders: HTTPHeaders = [:]
         if let token = token {
-            headers = ["token": token]
+            extraHeaders["token"] = token
+        }
+        let allHeaders = HTTPHeaders(
+            config.defaultHeaders.merging(extraHeaders.dictionary) { $1 }
+        )
+
+        if shouldShowLoading {
+            Toast.showProgress()
         }
 
-        let allHeaders = HTTPHeaders(defaultHeaders.dictionary.merging((headers ?? []).dictionary) { $1 })
-        
-        Toast.showProgress()
-        
-        var response: DataResponse<BaseResponse<T>, AFError>?
-        AF.request(urlStr, method: method, parameters: parameters, encoding: URLEncoding.default, headers: allHeaders)
-            .responseDecodable(of: BaseResponse<T>.self) { (closureResponse) in
-                response = closureResponse
-//                debugPrint("返回值:", response?.result ?? "空的")
-                
+        AF.request(
+            urlStr,
+            method: method,
+            parameters: parameters,
+            encoding: encoding,
+            headers: allHeaders
+        ) { urlRequest in
+            urlRequest.timeoutInterval = config.requestTimeout
+        }
+        .responseDecodable(of: BaseResponse<T>.self) { response in
+            if shouldShowLoading {
                 Toast.hiddenProgress()
+            }
 
-                switch response?.result {
+            DispatchQueue.main.async {
+                switch response.result {
                 case .success(let value):
-                    //可添加统一解析
-                    DispatchQueue.main.async {
-                        if value.code == 0 {
-                            if let data = value.data {
-                                debugPrint(data)
-                                success?(data)
-                                return
-                            }
+                    if value.code == config.successCode {
+                        if let data = value.data {
+                            success?(data)
+                        } else {
+                            let error = GFNetworkError.emptyData
+                            Toast.show(error.errorDescription)
+                            failure?(error)
                         }
-                        debugPrint("msg: \(value.msg)")
+                    } else {
+                        let error = GFNetworkError.business(code: value.code, message: value.msg)
                         Toast.show(value.msg)
-                    }
-                    break
-                case .failure(let error):
-                    DispatchQueue.main.async {
                         failure?(error)
-                        debugPrint("error: \(error.errorDescription ?? "空的")")
-                        Toast.show(error.errorDescription)
                     }
-                    break
-                case .none:
-                    break
+                case .failure(let error):
+                    Toast.show(error.errorDescription)
+                    failure?(error)
                 }
             }
+        }
     }
-    
-    var baseUrl: String = ""
-
-    private var defaultHeaders: HTTPHeaders {
-        let headers: HTTPHeaders = ["device-type": "ios", "device-info": ""]
-        return headers
-    }
-    
 }
 
-//MARK: - public
-extension NetWork {
-    func postUrlWithModel<T: Codable>(path: String, type: T.Type, param: [String: Any]? = nil, token: String? = nil, success: ((T) -> Void)?, failure: ((Error?) -> Void)? = nil) {
-        baseRequestWithModel(url: path, method: .post, parameters: param, token: token, type: type, success: success, failure: failure)
+// MARK: - 公开接口
+
+public extension NetWork {
+
+    /// POST 请求，参数以 JSON Body 发送
+    /// - Parameters:
+    ///   - path: 接口路径（拼接到 baseURL 后）
+    ///   - type: data 字段对应的 Model 类型
+    ///   - param: 请求参数
+    ///   - token: 可选 token，会写入请求头
+    ///   - showLoading: 是否显示 Loading，nil 时使用全局配置
+    func postUrlWithModel<T: Codable>(
+        path: String,
+        type: T.Type,
+        param: [String: Any]? = nil,
+        token: String? = nil,
+        showLoading: Bool? = nil,
+        success: ((T) -> Void)?,
+        failure: ((Error) -> Void)? = nil
+    ) {
+        baseRequestWithModel(
+            url: path,
+            method: .post,
+            parameters: param,
+            encoding: JSONEncoding.default,
+            token: token,
+            type: type,
+            showLoading: showLoading,
+            success: success,
+            failure: failure
+        )
     }
 
-    func getUrlWithModel<T: Codable>(path: String, type: T.Type, param: [String: Any]? = nil, token: String? = nil, success: ((T) -> Void)?, failure: ((Error?) -> Void)? = nil) {
-        baseRequestWithModel(url: path, method: .get, parameters: param, token: token, type: type, success: success, failure: failure)
+    /// GET 请求，参数以 URL Query 发送
+    func getUrlWithModel<T: Codable>(
+        path: String,
+        type: T.Type,
+        param: [String: Any]? = nil,
+        token: String? = nil,
+        showLoading: Bool? = nil,
+        success: ((T) -> Void)?,
+        failure: ((Error) -> Void)? = nil
+    ) {
+        baseRequestWithModel(
+            url: path,
+            method: .get,
+            parameters: param,
+            encoding: URLEncoding.default,
+            token: token,
+            type: type,
+            showLoading: showLoading,
+            success: success,
+            failure: failure
+        )
     }
 }
